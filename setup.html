@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Topic modeling workshop - About</title>
+<title>Topic modeling workshop - Příprava</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -111,7 +111,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Úvod</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./setup.html"> 
+    <a class="nav-link active" href="./setup.html" aria-current="page"> 
 <span class="menu-text">Příprava</span></a>
   </li>  
 </ul>
@@ -128,14 +128,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Na této stránce</h2>
+   
+  <ul>
+  <li><a href="#interprety1-programovacích-jazyků-a-ide" id="toc-interprety1-programovacích-jazyků-a-ide" class="nav-link active" data-scroll-target="#interprety1-programovacích-jazyků-a-ide">Interprety programovacích jazyků a IDE</a></li>
+  <li><a href="#balíky-do-r" id="toc-balíky-do-r" class="nav-link" data-scroll-target="#balíky-do-r">Balíky do R</a></li>
+  <li><a href="#moduly-do-pythonu" id="toc-moduly-do-pythonu" class="nav-link" data-scroll-target="#moduly-do-pythonu">Moduly do Pythonu</a>
+  <ul class="collapse">
+  <li><a href="#sec-python-setup" id="toc-sec-python-setup" class="nav-link" data-scroll-target="#sec-python-setup">Doporučený postup instalace přes R a RStudio</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">About</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Kód</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">Příprava</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Kód</button></div></div>
 </div>
 
 
@@ -152,19 +163,73 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>About this site</p>
+<p>Níže je seznam věcí, které v rámci workshopu pravděpodobně využijeme. Mezi nimi se – velmi netradičně – nachází i modul pro jazyk Python. A jelikož jsou workshopy “eRkařské”, v sekci níže je <a href="#sec-python-setup">návod</a>, jak celou instalaci zvládnout z R konzole RStudia. Kvůli nárokům na výpočetní výkon je ale tento krok spíše doporučený a možná bude výhodnější a příjemnější využít Jupyter Notebook v rámci Google Colab (odkaz doplním). K používání (zdarma) je zapotřebí jen Google účet.</p>
+<section id="interprety1-programovacích-jazyků-a-ide" class="level2">
+<h2 class="anchored" data-anchor-id="interprety1-programovacích-jazyků-a-ide">Interprety<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> programovacích jazyků a IDE</h2>
+<ol type="1">
+<li><p><a href="https://cloud.r-project.org/">R</a> (verze 4.0.0 a novější)</p></li>
+<li><p><a href="https://posit.co/download/rstudio-desktop/">RStudio Desktop</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> IDE v aktuální verzi</p></li>
+<li><p><a href="https://www.python.org/">Python</a> (ideálně ve <a href="https://www.python.org/downloads/release/python-3116/">verzi 3.11.6</a><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>)</p></li>
+</ol>
+</section>
+<section id="balíky-do-r" class="level2">
+<h2 class="anchored" data-anchor-id="balíky-do-r">Balíky do R</h2>
+<ul>
+<li><code>tidyverse</code></li>
+<li><code>tidytext</code></li>
+<li><code>topicmodels</code></li>
+<li><code>LDAvis</code></li>
+<li><code>LDAvisData</code><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></li>
+<li><code>ldatuning</code></li>
+<li><code>reticulate</code></li>
+</ul>
+</section>
+<section id="moduly-do-pythonu" class="level2">
+<h2 class="anchored" data-anchor-id="moduly-do-pythonu">Moduly do Pythonu</h2>
+<ul>
+<li><code>bertopic</code> (verze 0.15.0)</li>
+</ul>
+<section id="sec-python-setup" class="level3">
+<h3 class="anchored" data-anchor-id="sec-python-setup">Doporučený postup instalace přes R a RStudio</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Zkopírovat do schránky" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># nainstalujeme utilitu pro správu izolovaných prostředí Pythonu</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install_miniconda</span>()</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># vytvoříme prostředí s názvem "topic_modeling", základem bude Python 3.11.6</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">conda_create</span>(<span class="st">"topic_modeling"</span>, <span class="at">python_version =</span> <span class="st">"3.11.6"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># nainstalujeme do něj modul bertopic 0.15.0</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">conda_install</span>(<span class="st">"topic_modeling"</span>, <span class="st">"bertopic==0.15.0"</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># vyžádáme specifickou verzi závislosti bertopicu, která funguje...</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">conda_install</span>(<span class="st">"topic_modeling"</span>, <span class="st">"transformers==4.35.2"</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># použijeme nastavené prostředí</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">use_condaenv</span>(<span class="st">"topic_modeling"</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># potvrdíme si, že RStudio pracuje s daným prostředím</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># někdy je nutné restartovat R session</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">py_config</span>()</span></code><button title="Zkopírovat do schránky" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
 <!-- -->
 
+</section>
+</section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Poznámky pod čarou</h2>
+
+<ol>
+<li id="fn1"><p>Ano, v češtině se opravdu <a href="https://cs.wikipedia.org/wiki/Interpret_(software)">používá</a> tento termín 😅.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Můžete i <a href="https://posit.cloud/">“cloudově”</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Ostatní verze by pro naše potřeby také fungovat <em>měly</em>. Tedy kromě Pythonu 3.12, pro který zatím není modul <code>pythorch</code>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Není na CRANu, tzn. k instalaci použijte <code>remotes::install_github("cpsievert/LDAvisData")</code>.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</aside></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -777,15 +842,68 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Zdrojový kód</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb3" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "About"</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>About this site</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Příprava"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>Níže je seznam věcí, které v rámci workshopu pravděpodobně využijeme. Mezi nimi se -- velmi netradičně -- nachází i modul pro jazyk Python. A jelikož jsou workshopy "eRkařské", v sekci níže je <span class="co">[</span><span class="ot">návod</span><span class="co">](#sec-python-setup)</span>, jak celou instalaci zvládnout z R konzole RStudia. Kvůli nárokům na výpočetní výkon je ale tento krok spíše doporučený a možná bude výhodnější a příjemnější využít Jupyter Notebook v rámci Google Colab (odkaz doplním). K používání (zdarma) je zapotřebí jen Google účet.</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">## Interprety[^1] programovacích jazyků a IDE</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="ot">[^1]: </span>Ano, v češtině se opravdu <span class="co">[</span><span class="ot">používá</span><span class="co">]</span>(https://cs.wikipedia.org/wiki/Interpret_(software)) tento termín 😅.</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span><span class="co">[</span><span class="ot">R</span><span class="co">](https://cloud.r-project.org/)</span> (verze 4.0.0 a novější)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span><span class="co">[</span><span class="ot">RStudio Desktop</span><span class="co">](https://posit.co/download/rstudio-desktop/)</span><span class="ot">[^2]</span> IDE v aktuální verzi</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span><span class="co">[</span><span class="ot">Python</span><span class="co">](https://www.python.org/)</span> (ideálně ve <span class="co">[</span><span class="ot">verzi 3.11.6</span><span class="co">](https://www.python.org/downloads/release/python-3116/)</span><span class="ot">[^3]</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="ot">[^2]: </span>Můžete i <span class="co">[</span><span class="ot">"cloudově"</span><span class="co">](https://posit.cloud/)</span>.</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="ot">[^3]: </span>Ostatní verze by pro naše potřeby také fungovat *měly*. Tedy kromě Pythonu 3.12, pro který zatím není modul <span class="in">`pythorch`</span>.</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="fu">## Balíky do R</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`tidyverse`</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`tidytext`</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`topicmodels`</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`LDAvis`</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`LDAvisData`</span><span class="ot">[^4]</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`ldatuning`</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`reticulate`</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="ot">[^4]: </span>Není na CRANu, tzn. k instalaci použijte <span class="in">`remotes::install_github("cpsievert/LDAvisData")`</span>.</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="fu">## Moduly do Pythonu</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`bertopic`</span> (verze 0.15.0)</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="fu">### Doporučený postup instalace přes R a RStudio {#sec-python-setup}</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="co"># nainstalujeme utilitu pro správu izolovaných prostředí Pythonu</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="fu">install_miniconda</span>()</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="co"># vytvoříme prostředí s názvem "topic_modeling", základem bude Python 3.11.6</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="fu">conda_create</span>(<span class="st">"topic_modeling"</span>, <span class="at">python_version =</span> <span class="st">"3.11.6"</span>)</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="co"># nainstalujeme do něj modul bertopic 0.15.0</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="fu">conda_install</span>(<span class="st">"topic_modeling"</span>, <span class="st">"bertopic==0.15.0"</span>)</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="co"># vyžádáme specifickou verzi závislosti bertopicu, která funguje...</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="fu">conda_install</span>(<span class="st">"topic_modeling"</span>, <span class="st">"transformers==4.35.2"</span>)</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a><span class="co"># použijeme nastavené prostředí</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="fu">use_condaenv</span>(<span class="st">"topic_modeling"</span>)</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a><span class="co"># potvrdíme si, že RStudio pracuje s daným prostředím</span></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="co"># někdy je nutné restartovat R session</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a><span class="fu">py_config</span>()</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Zkopírovat do schránky" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

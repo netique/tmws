@@ -1,16 +1,44 @@
 [
   {
+    "objectID": "setup.html",
+    "href": "setup.html",
+    "title": "Příprava",
+    "section": "",
+    "text": "Níže je seznam věcí, které v rámci workshopu pravděpodobně využijeme. Mezi nimi se – velmi netradičně – nachází i modul pro jazyk Python. A jelikož jsou workshopy “eRkařské”, v sekci níže je návod, jak celou instalaci zvládnout z R konzole RStudia. Kvůli nárokům na výpočetní výkon je ale tento krok spíše doporučený a možná bude výhodnější a příjemnější využít Jupyter Notebook v rámci Google Colab (odkaz doplním). K používání (zdarma) je zapotřebí jen Google účet."
+  },
+  {
+    "objectID": "setup.html#interprety1-programovacích-jazyků-a-ide",
+    "href": "setup.html#interprety1-programovacích-jazyků-a-ide",
+    "title": "Příprava",
+    "section": "Interprety1 programovacích jazyků a IDE",
+    "text": "Interprety1 programovacích jazyků a IDE\n\nR (verze 4.0.0 a novější)\nRStudio Desktop2 IDE v aktuální verzi\nPython (ideálně ve verzi 3.11.63)"
+  },
+  {
+    "objectID": "setup.html#balíky-do-r",
+    "href": "setup.html#balíky-do-r",
+    "title": "Příprava",
+    "section": "Balíky do R",
+    "text": "Balíky do R\n\ntidyverse\ntidytext\ntopicmodels\nLDAvis\nLDAvisData4\nldatuning\nreticulate"
+  },
+  {
+    "objectID": "setup.html#moduly-do-pythonu",
+    "href": "setup.html#moduly-do-pythonu",
+    "title": "Příprava",
+    "section": "Moduly do Pythonu",
+    "text": "Moduly do Pythonu\n\nbertopic (verze 0.15.0)\n\n\nDoporučený postup instalace přes R a RStudio\n\nlibrary(reticulate)\n\n# nainstalujeme utilitu pro správu izolovaných prostředí Pythonu\ninstall_miniconda()\n\n# vytvoříme prostředí s názvem \"topic_modeling\", základem bude Python 3.11.6\nconda_create(\"topic_modeling\", python_version = \"3.11.6\")\n\n# nainstalujeme do něj modul bertopic 0.15.0\nconda_install(\"topic_modeling\", \"bertopic==0.15.0\")\n\n# vyžádáme specifickou verzi závislosti bertopicu, která funguje...\nconda_install(\"topic_modeling\", \"transformers==4.35.2\")\n\n# použijeme nastavené prostředí\nuse_condaenv(\"topic_modeling\")\n\n# potvrdíme si, že RStudio pracuje s daným prostředím\n# někdy je nutné restartovat R session\npy_config()"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Materiály k workshopu",
+    "section": "",
+    "text": "Zde budou postupně přibývat materiály pro workshop. Zatím se podívejte, co si na svém počítači připravit, pokud si budete chtít věci sami zkoušet."
+  },
+  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
     "section": "",
     "text": "About this site\n\n1 + 1\n\n[1] 2"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "tmws",
-    "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
   }
 ]
