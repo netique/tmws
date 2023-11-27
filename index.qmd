@@ -1,5 +1,7 @@
 ---
 title: "Materiály k workshopu"
+comments: false
+repo-actions: false
 ---
 
 Zde budou postupně přibývat materiály pro workshop. Zatím se podívejte, co si na svém počítači [připravit](setup.qmd), pokud si budete chtít věci sami zkoušet.

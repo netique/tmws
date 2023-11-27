@@ -4,7 +4,20 @@ project:
 website:
   site-url: https://netique.github.io/tmws/
   title: "Topic modeling workshop"
-  search: false
+  comments:
+    giscus:
+      repo: netique/tmws
+  repo-url: https://github.com/netique/tmws/
+  repo-actions: [edit, issue]
+  open-graph: true
+  twitter-card:
+    site: "@netikja"
+  page-footer:
+    center:
+      - text: "© 2023 Jan Netík"
+      - text: "CC BY-SA 4.0"
+        href: "https://creativecommons.org/licenses/by-sa/4.0/"
+        target: blank
   navbar:
     background: primary
     left:
@@ -21,9 +34,9 @@ format:
     theme:
       light: default
       dark: darkly
-    css: styles.css
     toc: true
-    link-external-icon: true
+    html-math-method: katex
+    link-external-icon: false
     link-external-newwindow: true
     code-overflow: wrap
     code-tools: true
