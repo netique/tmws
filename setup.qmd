@@ -21,6 +21,7 @@ Níže je seznam věcí, které v rámci workshopu pravděpodobně využijeme. M
 ## Balíky do R
 
 -   `tidyverse`
+-   `here`
 -   `tidytext`
 -   `topicmodels`
 -   `LDAvis`
