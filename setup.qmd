@@ -1,0 +1,62 @@
+---
+title: "Příprava"
+---
+
+Níže je seznam věcí, které v rámci workshopu pravděpodobně využijeme. Mezi nimi se -- velmi netradičně -- nachází i modul pro jazyk Python. A jelikož jsou workshopy "eRkařské", v sekci níže je [návod](#sec-python-setup), jak celou instalaci zvládnout z R konzole RStudia. Kvůli nárokům na výpočetní výkon je ale tento krok spíše doporučený a možná bude výhodnější a příjemnější využít Jupyter Notebook v rámci Google Colab (odkaz doplním). K používání (zdarma) je zapotřebí jen Google účet.
+
+## Interprety[^1] programovacích jazyků a IDE
+
+[^1]: Ano, v češtině se opravdu [používá](https://cs.wikipedia.org/wiki/Interpret_(software)) tento termín 😅.
+
+1.  [R](https://cloud.r-project.org/) (verze 4.0.0 a novější)
+
+2.  [RStudio Desktop](https://posit.co/download/rstudio-desktop/)[^2] IDE v aktuální verzi
+
+3.  [Python](https://www.python.org/) (ideálně ve [verzi 3.11.6](https://www.python.org/downloads/release/python-3116/)[^3])
+
+[^2]: Můžete i ["cloudově"](https://posit.cloud/).
+
+[^3]: Ostatní verze by pro naše potřeby také fungovat *měly*. Tedy kromě Pythonu 3.12, pro který zatím není modul `pythorch`.
+
+## Balíky do R
+
+-   `tidyverse`
+-   `tidytext`
+-   `topicmodels`
+-   `LDAvis`
+-   `LDAvisData`[^4]
+-   `ldatuning`
+-   `reticulate`
+
+[^4]: Není na CRANu, tzn. k instalaci použijte `remotes::install_github("cpsievert/LDAvisData")`.
+
+## Moduly do Pythonu
+
+-   `bertopic`
+
+### Doporučený postup instalace přes R a RStudio {#sec-python-setup}
+
+```{r}
+#| eval: false
+
+library(reticulate)
+
+# nainstalujeme utilitu pro správu izolovaných prostředí Pythonu
+install_miniconda()
+
+# vytvoříme prostředí s názvem "topic_modeling", základem bude Python 3.11.6
+conda_create("topic_modeling", python_version = "3.11.6")
+
+# nainstalujeme do něj modul bertopic
+conda_install("topic_modeling", "bertopic==0.15.0")
+
+# vyžádáme specifickou verzi závislosti bertopicu, která funguje...
+conda_install("topic_modeling", "transformers==4.35.2")
+
+# použijeme nastavené prostředí
+use_condaenv("topic_modeling")
+
+# potvrdíme si, že RStudio pracuje s daným prostředím
+# někdy je nutné restartovat R session
+py_config()
+```

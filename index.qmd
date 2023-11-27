@@ -1,11 +1,5 @@
 ---
-title: "tmws"
+title: "Materiály k workshopu"
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
-
-```{r}
-1 + 1
-```
+Zde budou postupně přibývat materiály pro workshop. Zatím se podívejte, co si na svém počítači [připravit](setup.qmd), pokud si budete chtít věci sami zkoušet.
