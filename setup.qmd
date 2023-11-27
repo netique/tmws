@@ -32,7 +32,7 @@ Níže je seznam věcí, které v rámci workshopu pravděpodobně využijeme. M
 
 ## Moduly do Pythonu
 
--   `bertopic`
+-   `bertopic` (verze 0.15.0)
 
 ### Doporučený postup instalace přes R a RStudio {#sec-python-setup}
 
@@ -47,7 +47,7 @@ install_miniconda()
 # vytvoříme prostředí s názvem "topic_modeling", základem bude Python 3.11.6
 conda_create("topic_modeling", python_version = "3.11.6")
 
-# nainstalujeme do něj modul bertopic
+# nainstalujeme do něj modul bertopic 0.15.0
 conda_install("topic_modeling", "bertopic==0.15.0")
 
 # vyžádáme specifickou verzi závislosti bertopicu, která funguje...
