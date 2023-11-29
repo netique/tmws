@@ -5,3 +5,7 @@ repo-actions: false
 ---
 
 Zde budou postupně přibývat materiály pro workshop. Zatím se podívejte, co si na svém počítači [připravit](setup.qmd), pokud si budete chtít věci sami zkoušet.
+
+## Novinky
+
+-   v záložce [připrava](setup.qmd) nově najdete odkaz na Jupyter Notebok na Google Colab, kde je ukázka topic modelingu v Pythonu pomocí modulu `bertopic` (29. 11. 2023)
