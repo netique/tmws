@@ -4,21 +4,21 @@
     "href": "setup.html",
     "title": "Příprava",
     "section": "",
-    "text": "Níže je seznam věcí, které v rámci workshopu pravděpodobně využijeme. Mezi nimi se – velmi netradičně – nachází i modul pro jazyk Python. A jelikož jsou workshopy “eRkařské”, v sekci níže je návod, jak celou instalaci zvládnout z R konzole RStudia. Kvůli nárokům na výpočetní výkon je ale tento krok spíše doporučený a možná bude výhodnější a příjemnější využít Jupyter Notebook v rámci Google Colab (odkaz doplním). K používání (zdarma) je zapotřebí jen Google účet."
+    "text": "Níže je seznam věcí, které v rámci workshopu pravděpodobně využijeme. Mezi nimi se – velmi netradičně – nachází i modul pro jazyk Python. A jelikož jsou workshopy “eRkařské”, v sekci níže je návod, jak celou instalaci zvládnout z R konzole RStudia. Kvůli nárokům na výpočetní výkon je ale tento krok spíše doporučený1 a možná bude výhodnější a příjemnější využít tento Jupyter Notebook v rámci Google Colab. K používání (zdarma) je zapotřebí jen Google účet."
   },
   {
-    "objectID": "setup.html#interprety1-programovacích-jazyků-a-ide",
-    "href": "setup.html#interprety1-programovacích-jazyků-a-ide",
+    "objectID": "setup.html#interprety2-programovacích-jazyků-a-ide",
+    "href": "setup.html#interprety2-programovacích-jazyků-a-ide",
     "title": "Příprava",
-    "section": "Interprety1 programovacích jazyků a IDE",
-    "text": "Interprety1 programovacích jazyků a IDE\n\nR (verze 4.0.0 a novější)\nRStudio Desktop2 IDE v aktuální verzi\nPython (ideálně ve verzi 3.11.63)"
+    "section": "Interprety2 programovacích jazyků a IDE",
+    "text": "Interprety2 programovacích jazyků a IDE\n\nR (verze 4.0.0 a novější)\nPython (ideálně ve verzi 3.11.63)\nRStudio Desktop4 IDE v aktuální verzi"
   },
   {
     "objectID": "setup.html#balíky-do-r",
     "href": "setup.html#balíky-do-r",
     "title": "Příprava",
     "section": "Balíky do R",
-    "text": "Balíky do R\n\ntidyverse\nhere\ntidytext\ntopicmodels\nLDAvis\nLDAvisData4\nldatuning\nreticulate"
+    "text": "Balíky do R\n\ntidyverse\nhere\ntidytext\ntopicmodels\nLDAvis\nldatuning\nreticulate (když budete chtít zkoušet Python v R)"
   },
   {
     "objectID": "setup.html#moduly-do-pythonu",
@@ -33,5 +33,12 @@
     "title": "Materiály k workshopu",
     "section": "",
     "text": "Zde budou postupně přibývat materiály pro workshop. Zatím se podívejte, co si na svém počítači připravit, pokud si budete chtít věci sami zkoušet."
+  },
+  {
+    "objectID": "index.html#novinky",
+    "href": "index.html#novinky",
+    "title": "Materiály k workshopu",
+    "section": "Novinky",
+    "text": "Novinky\n\nv záložce připrava nově najdete odkaz na Jupyter Notebok na Google Colab, kde je ukázka topic modelingu v Pythonu pomocí modulu bertopic (29. 11. 2023)"
   }
 ]
