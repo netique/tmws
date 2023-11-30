@@ -1,0 +1,39 @@
+---
+title: "Ukázka BERTopic"
+subtitle: "V Pythonu v rámci RStudia"
+author: "Jan Netík"
+format: html
+jupyter: python3
+---
+
+```{python}
+from bertopic import BERTopic
+from sklearn.datasets import fetch_20newsgroups
+from sentence_transformers import SentenceTransformer
+```
+
+```{python}
+docs = fetch_20newsgroups(subset='all',  remove=('headers', 'footers', 'quotes'))['data']
+```
+
+```{python}
+# 384-dimensional sentence embeddings (cf. GPT davinci with 12K)
+# embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
+
+# if on Apple Silicon device, use rather
+embedding_model = SentenceTransformer("all-MiniLM-L6-v2", device="mps")
+```
+
+```{python}
+embeddings = embedding_model.encode(docs, show_progress_bar=True)
+```
+
+```{python}
+topic_model = BERTopic()
+topics, probs = topic_model.fit_transform(docs, embeddings=embeddings)
+
+```
+
+```{python}
+topic_model.visualize_barchart()
+```

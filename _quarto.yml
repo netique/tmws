@@ -1,5 +1,9 @@
 project:
   type: website
+  render:
+    - "*.qmd"
+    - "!analyses/"
+    - "!prezi/"
 
 website:
   site-url: https://netique.github.io/tmws/

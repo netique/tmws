@@ -1,0 +1,174 @@
+---
+title: "Ukázka BERTopic"
+subtitle: "V R v rámci RStudia"
+author: "Jan Netík"
+format: html
+---
+
+Načteme R balíky.
+
+```{r}
+library(tidyverse)
+library(here)
+library(reticulate)
+
+# pomocné funkce
+source(here("shared.R"))
+```
+
+Použijeme prostředí Pythonu, které jsme si nakonfigurovali dříve[^1].
+
+[^1]: Viz `setup/setup_python.R`.
+
+```{r}
+use_condaenv("topic_modeling")
+```
+
+Načteme Python moduly.
+
+```{r}
+bt <- import("bertopic")
+bt_repre <- import("bertopic.representation")
+st <- import("sentence_transformers")
+sklearn_datasets <- import("sklearn.datasets")
+cv <- import("sklearn.feature_extraction.text")
+```
+
+## Data
+
+Klasický dataset 20 newsgroups je distribuován v modulu `sklearn.datesets`. Jde o cca 20K krátkých zpráv, které si vyměňovali uživatelé Usenetu (tj. někdy v 90. letech). Zprávy pocházejí rovnoměrně z 20 kanálů.
+
+Funkce rovnou umožňuje smazat různé technické části zpráv, které nás nezajímají. Nakonec z objektu vybereme pouze `data`.
+
+```{r}
+newsgroups_raw <- sklearn_datasets$fetch_20newsgroups(
+  subset = "all",
+  remove = tuple("headers", "footers", "quotes")
+)
+
+# data samotná jsou ještě o úroveň níže
+d_newsgroups <- newsgroups_raw[["data"]]
+```
+
+## Trénujeme model
+
+Získáme zvlášť embeddings.
+
+```{r}
+# na Apple Silicon strojích chceme využít "grafickou kartu"
+st_device <- NULL
+
+if (version$platform == "aarch64-apple-darwin20") {
+  st_device <- "mps"
+}
+
+# definujeme model
+embedding_model <- st$SentenceTransformer("all-MiniLM-L6-v2", device = st_device)
+
+# spočítáme embeddings, pokud už je nemáme
+if (file.exists(here("data/embeddings/newsgroups.rds"))) {
+  embeddings <- read_rds(here("data/embeddings/newsgroups.rds"))
+} else {
+  embeddings <- embedding_model$encode(d_newsgroups, show_progress_bar = TRUE)
+}
+```
+
+Odhadneme zbytek modelu.
+
+```{r}
+topic_model <- bt$BERTopic(language = "english", verbose = TRUE)
+
+output <- topic_model$fit_transform(d_newsgroups, embeddings = embeddings)
+
+tbl_output <- tibble(
+  document = seq_along(d_newsgroups),
+  topic = output[[1]],
+  prob = output[[2]]
+)
+```
+
+## Výsledky
+
+Základní přehled témat, počtů příslušných dokumentů a shrnutí clusterů získáte skrze:
+
+```{r}
+topic_model$get_topic_info()
+```
+
+Nejvíce zastoupené téma je pod indexem `0`. Podrobnosti o tématu získáme příkazem níže. Výstupem jsou slova s nejvyšší c-TF-IDF hodnotou, zobrazenou u každého slova. c-TF-IDF je TF-IDF fungující ne na úrovni dokumentů, ale clusterů. Říká, jaká slova jsou nejvíce relevantní pro dané téma; vychází ze "slepence" dokumentů v rámci clusteru.
+
+```{r}
+topic_model$get_topic(4) |> tuple_list_to_tibble()
+```
+
+```{r}
+topic_model$visualize_barchart()
+```
+
+UMAP do 2 dimenzí
+
+```{r}
+topic_model$visualize_documents(d_newsgroups, embeddings = embeddings, topics = tuple(as.list(1:10)))
+```
+
+```{r}
+topic_model$visualize_heatmap(top_n_topics = 50L)
+```
+
+```{r}
+topic_model$visualize_hierarchy(orientation = "left", top_n_topics = 10L)
+```
+
+Můžeme srovnat s nějakými externími informacemi. Tady např. víme, v jakém novinkovém kanálu se zpráva objevila. Můžeme použít i údaj o výzkumné skupině atp.
+
+```{r}
+classes_nms <- newsgroups_raw$target_names
+classes_idx <- newsgroups_raw$target + 1L # prevent zeros
+
+
+classes_fct <- factor(classes_idx, labels = classes_nms)
+
+topics_per_class <- topic_model$topics_per_class(d_newsgroups, classes_fct)
+
+topic_model$visualize_topics_per_class(topics_per_class = topics_per_class)
+```
+
+Embeddings, UMAP a HDBSCAN necháme, jak jsme je "nafitovali", ale zkusíme poladit reprezentace clusterů.
+
+Nejprve zkusíme vyřadit anglická stop slova, hledat a spojovat slovní spojení až o třech slovech a brát v potaz jen slova, co se vyskytnou alespoň 20krát:
+
+```{r}
+vectorizer_model <-  cv$CountVectorizer(stop_words="english", ngram_range = tuple(1L, 3L), min_df = 20L)
+
+topic_model$update_topics(d_newsgroups, vectorizer_model=vectorizer_model )
+```
+
+```{r}
+topic_model$visualize_barchart()
+
+```
+
+```{r}
+# representation_model_keybert <- bt_repre$KeyBERTInspired()
+# topic_model$update_topics(d_newsgroups, vectorizer_model=vectorizer_model, representation_model = representation_model_keybert)
+```
+
+Hrát si můžeme i se samotnými popisky. Tento krok se defaultně nepoužívá. Zkusíme model od Facebooku, který umí obsah témat klasifikovat do kategorií, na kterých ani nemusel být trénovaný (tzv. "zero-shot" klasifikace). Je ale třeba vymyslet sadu kandidátních popisků.
+
+```{r}
+candidate_topics <- c("computers", "bicycles", "cars", "sport", "palestine", "health")
+representation_model <- bt_repre$ZeroShotClassification(candidate_topics = candidate_topics, model="facebook/bart-large-mnli") 
+
+
+topic_model$update_topics(d_newsgroups, vectorizer_model=vectorizer_model, representation_model = representation_model)
+
+```
+
+```{r}
+
+topic_model$get_topic_info() 
+topic_model$visualize_barchart()
+
+```
+
+Pozn: máme-li peníze a API na OpenAI, můžeme o shrnutí témat poprosit ChatGPT.

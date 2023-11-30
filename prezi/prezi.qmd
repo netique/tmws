@@ -1,0 +1,218 @@
+---
+title: Topic modeling 📚
+subtitle: Jak vytěžit jazykové modely a nepřijít o práci
+author:
+  - name: Jan Netík
+    email: netikja@gmail.com
+    orcid: 0000-0002-3888-3203
+    affiliation: ÚI AV ČR / Schola Empirica / PedF UK
+date: 2023-11-30
+
+format:
+  revealjs:
+    title-slide-attributes: 
+      data-background-color: "#0066cc"
+    html-math-method: katex
+    
+date-format: medium
+df-print: kable
+lang: cs
+bibliography: references.bib
+csl: apa.csl
+---
+
+```{r}
+library(tidyverse)
+```
+
+##  {.center}
+
+::: {style="font-size:2.5em;text-align:center"}
+Topic[...]{.fragment} [co? 🤔]{.fragment}
+:::
+
+## Topic modeling
+
+::: incremental
+-   velké množství textu
+
+-   rozdělení do **dokumentů**
+
+-   ❓ jaká témata se v textu objevují
+
+-   ❓ jaké je zastoupení témat v jednotlivých dokumentech
+:::
+
+::: {.callout-warning .fragment}
+## Pozor
+
+TM vs. shrnutí textu, extrakce klíčových slov, zero-shot klasifikace, rozeznávání pojmenovaných entit atp.
+:::
+
+::: notes
+-   oblast natural language processing (NLP), někdo říká text analysis
+-   supervidované vs. **nesupervidované (TM, clustering...)** učení
+:::
+
+## Něco na čtení {.smaller}
+
+::: columns
+::: {.column style="text-align: center"}
+![](figs/text_mining_cover.png){fig-align="center" height="500"}
+
+@silge2017
+:::
+
+::: {.column style="text-align: center"}
+![](figs/smltar_cover.jpg){fig-align="center" height="500"}
+
+@hvitfeldt2021
+:::
+:::
+
+## Z "historie"
+
+-   preprocessing, stopwords, tokenizace [viz @hvitfeldt2021]
+-   co s flektivními jazyky jako čeština?
+    -   lemmatizace, stemming
+-   **tokeny** s sebou nenesou kontext\
+    (lze trochu obejít pomocí *n*-gramů)
+
+## *N*-gramy
+
+-   místo `topic` a `modeling` zavedu `topic modeling`
+-   pohyblivé okno nad textem → možnost grafů
+
+## *N*-gramy {.smaller}
+
+![](figs/bigrams_bible.png){.r-stretch fig-align="center"}
+
+::: {style="text-align: right"}
+@silge2017
+:::
+
+## Z "historie" 2
+
+-   četnosti (term frequency)
+-   **TF-IDF** (term frequency -- inverse document frequency; *součin*)\
+    $$IDF(\text{token}) = \ln{\left(\frac{n_{\text{dokumentů}}}{n_{\text{dokumentů s tokenem}}}\right)}$$
+-   document-term matrix (DTM)
+
+## 
+
+|                   | topic | modeling | ... |
+|-------------------|-------|----------|-----|
+| **dokument č. 1** | 0     | 5        | ... |
+| **dokument č. 2** | 2     | 1        | ... |
+| **dokument č. 3** | 4     | 8        | ... |
+| ...               | ...   | ...      | ... |
+
+: Document-term matrix
+
+## Přístupy k topic modelingu
+
+-   latentní Dirichletova alokace [Latent Dirchlet Allocation, LDA, @lda]
+-   [Non-negative Matrix Factorization (NMF)]{style="color:#6f6f6f"}
+-   [Latent Semantic Analysis (LSA)]{style="color:#6f6f6f"}
+
+## Latent Dirchlet Allocation
+
+-   každý dokument je směsicí různých témat
+-   každé téma se skládá z mixu slov
+-   jednotlivá slova mohou být zastoupena ve více tématech
+
+# Ukázka 1 {background-color="#0066cc"}
+
+Latent Dirchlet Allocation
+
+## Problémy tradičních přístupů
+
+-   nutnost preprocessingu
+-   tokeny standardně bez kontextu
+-   náročná interpretace výsledků
+
+## Možnosti
+
+-   word **embeddings** ("vnoření slov")
+
+    -   převedení textových dat na čísla
+    -   čísla = N-dimenzionální vektory v prostoru
+    -   můžeme dělat matematiku, např:
+        -   kosinová podobnost ($cos$ úhlu mezi 2 vektory) nebo
+        -   $vec(\text{král}) - vec(\text{muž}) + vec(\text{žena}) =$ [$vec(\text{královna})$]{.fragment}
+
+    ::: aside
+    `word2vec` [@mikolov2013]
+    :::
+
+------------------------------------------------------------------------
+
+{{< video https://www.youtube.com/watch?v=viZrOnJclY0 width="100%" height="100%" >}}
+
+## Možnosti 2 {auto-animate="true"}
+
+::: incremental
+1.  průměr word embeddings za každý dokument
+
+2.  redukce dimenzionality
+
+3.  clustering
+
+4.  ❓❓❓
+:::
+
+## Možnosti 3 {auto-animate="true"}
+
+-   `top2vec` [@angelov2020]
+    1.  embeddings pro dokumenty a slova ve stejném prostoru
+    2.  redukce dimenzionality
+    3.  clustering
+    4.  hledání nejbližších slov kolem centroidů clusterů → interpretace
+
+## Možnosti 4 {auto-animate="true"}
+
+-   `BERTopic` [@grootendorst2022]
+    1.  embeddings dokumentů
+    2.  redukce dimenzionality
+    3.  clustering
+    4.  sloučení obsahu dokumentů v rámci clusterů, tokenizace
+    5.  reprezentace témat pomocí upravené TF-IDF
+
+::: aside
+Dokumentace na [maartengr.github.io/BERTopic](https://maartengr.github.io/BERTopic/)
+:::
+
+##  {.smaller}
+
+![](figs/bertopic_algorithm.svg){.r-stretch fig-align="left"}
+
+::: {style="text-align: right"}
+Zdroj: [maartengr.github.io/BERTopic](https://maartengr.github.io/BERTopic/)
+:::
+
+## BERTopic -- embeddings
+
+-   hlavní "objekt" celého modelování
+-   předtrénovaný model SBERT [@reimers2019sentencebert]
+    -   speciálně uzpůsobený na věty (a kratší odstavce)[^1]
+
+[^1]: Delší celky je vhodné rozdělit, nebo použít jiný model.
+
+## BERTopic -- redukce dimenzí
+
+-   máme data s 18 846 rádky 384 sloupci (384dimenzionální embeddings)
+-   potřeba redukce
+-   metoda UMAP (Uniform Manifold Approximation and Projection for Dimension Reduction)
+
+## BERTopic -- clustering
+
+-   identifikace skupin mezi dokumenty
+
+# Ukázka 2 {background-color="#0066cc"}
+
+BERTopic
+
+## Reference
+
+::: refs
+:::

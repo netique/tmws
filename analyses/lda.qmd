@@ -1,0 +1,149 @@
+---
+title: "Latent Dirichlet Allocation (LDA)"
+author: "Jan Netík"
+format: html
+---
+
+```{r}
+library(tidyverse)
+library(topicmodels)
+library(ldatuning)
+library(tidytext)
+
+data("AssociatedPress")
+```
+
+Data jsou uložena jako document-term matrix, převeďme si je tedy do tibble.
+
+```{r}
+ap_tidy <- AssociatedPress |> tidy()
+
+ap_tidy
+```
+
+Použijeme seznam stop slov z `tidytext` a přidáme si vlastní:
+
+```{r}
+stop_words <- stop_words |> add_row(word = c("th", "sr", "r", "h", "e"))
+```
+
+A smažeme je z našich dat. Poté z tidy formátu vyrobíme zpět document-term matrix.
+
+```{r}
+ap_dtm <- ap_tidy |>
+  anti_join(stop_words, by = c(term = "word")) |>
+  cast_dtm(document, term, count)
+
+ap_dtm
+```
+
+```{r}
+#| cache: true
+
+optimal.topics <- FindTopicsNumber(
+  ap_dtm,
+  topics = 2:8,
+  metrics = c("Griffiths2004", "CaoJuan2009", "Arun2010", "Deveaud2014"),
+  control = list(seed = 123),
+  mc.cores = parallel::detectCores() / 2, # zapojení všech jader způsobí pád R...
+  verbose = TRUE
+)
+```
+
+```{r}
+FindTopicsNumber_plot(optimal.topics)
+```
+
+Dejme tomu, že 5 témat už má dobré metriky a není to zas tak moc...
+
+"Fitneme" finální model:
+
+```{r}
+#| cache: true
+ap_lda <- LDA(ap_dtm, k = 5, control = list(seed = 123))
+```
+
+```{r}
+# beta = pravděpodobnost, že slovo bylo "vygenerováno" daným tématem
+ap_topics <- tidy(ap_lda, matrix = "beta")
+
+ap_topics
+```
+
+```{r}
+ap_top_terms <- ap_topics %>%
+  group_by(topic) %>%
+  slice_max(beta, n = 10) %>%
+  ungroup() %>%
+  arrange(topic, -beta)
+
+ap_top_terms %>%
+  mutate(term = reorder_within(term, beta, topic)) %>%
+  ggplot(aes(beta, term, fill = factor(topic))) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~topic, scales = "free") +
+  scale_y_reordered()
+```
+
+Slova, co se s nějakou pravděpodobností vyskytují tak nějak napříč:
+
+```{r}
+ap_topics |>
+  filter(beta > .001) |>
+  pivot_wider(names_from = topic, values_from = beta, names_prefix = "topic_") |>
+  filter(if_all(-term, \(x) !is.na(x)))
+```
+
+Teď k pravděpodobnosti témat v rámci jednotlivých dokumentů:
+
+```{r}
+# gamma = podíl slov v dokumentu, které byly "vygenerovány" daným tématem
+ap_documents <- tidy(ap_lda, matrix = "gamma")
+
+ap_documents |>
+  mutate(document = as.integer(document)) |>
+  arrange(document, topic)
+```
+
+Součet hodnot $\gamma$ pro každý dokument je roven 1.
+
+```{r}
+ap_documents |>
+  group_by(document) |>
+  summarise(gamma_sum = sum(gamma))
+```
+
+Dokument 1 je skoro čisté téma č. 5:
+
+```{r}
+ap_tidy |>
+  filter(document == 1) |>
+  arrange(desc(count))
+```
+
+Ale dokument 2 je mix témat 2 a 3. Pojďme se podívat blíž:
+
+```{r}
+ap_tidy |>
+  filter(document == 2) |>
+  arrange(desc(count))
+```
+
+```{r}
+library(LDAvis)
+```
+
+```{r}
+# post <- posterior(ap_lda)
+# mat <- ap_lda@wordassignments
+#
+# ldavis_json <- LDAvis::createJSON(
+#   phi = post[["terms"]],
+#   theta = post[["topics"]],
+#   vocab = colnames(post[["terms"]]),
+#   doc.length = rowSums(as.matrix(mat), na.rm = TRUE),
+#   term.frequency = colSums(as.matrix(mat), na.rm = TRUE)
+# )
+#
+# ldavis_json |> serVis()
+```
