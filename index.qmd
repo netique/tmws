@@ -8,4 +8,6 @@ Zde budou postupně přibývat materiály pro workshop. Zatím se podívejte, co
 
 ## Novinky
 
+-   veškerý kód je na GitHub repozitáři <https://github.com/netique/tmws/> (30. 11. 2023)
+
 -   v záložce [připrava](setup.qmd) nově najdete odkaz na Jupyter Notebok na Google Colab, kde je ukázka topic modelingu v Pythonu pomocí modulu `bertopic` (29. 11. 2023)

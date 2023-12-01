@@ -176,7 +176,9 @@ Latent Dirchlet Allocation
     2.  redukce dimenzionality
     3.  clustering
     4.  sloučení obsahu dokumentů v rámci clusterů, tokenizace
-    5.  reprezentace témat pomocí upravené TF-IDF
+    5.  reprezentace témat pomocí upravené TF-IDF[^1]
+
+[^1]: "c-TF-IDF": jaká slova jsou nejvíce relevantní pro dané téma.
 
 ::: aside
 Dokumentace na [maartengr.github.io/BERTopic](https://maartengr.github.io/BERTopic/)
@@ -194,19 +196,31 @@ Zdroj: [maartengr.github.io/BERTopic](https://maartengr.github.io/BERTopic/)
 
 -   hlavní "objekt" celého modelování
 -   předtrénovaný model SBERT [@reimers2019sentencebert]
-    -   speciálně uzpůsobený na věty (a kratší odstavce)[^1]
+    -   speciálně uzpůsobený na věty (a kratší odstavce)[^2]
 
-[^1]: Delší celky je vhodné rozdělit, nebo použít jiný model.
+[^2]: Delší celky je vhodné rozdělit, nebo použít jiný model.
 
 ## BERTopic -- redukce dimenzí
 
 -   máme data s 18 846 rádky 384 sloupci (384dimenzionální embeddings)
 -   potřeba redukce
 -   metoda UMAP (Uniform Manifold Approximation and Projection for Dimension Reduction)
+-   pozor -- stochastické
 
 ## BERTopic -- clustering
 
 -   identifikace skupin mezi dokumenty
+-   metoda HDBSCAN (Hierarchical Density-Based Spatial Clustering of Applications with Noise)
+-   hustota prvků v prostoru
+-   možnost outlierů
+
+##  {.smaller}
+
+![](figs/clustering.png){.r-stretch fig-align="center"}
+
+::: {style="text-align: right"}
+Zdroj: [scikit-learn.org/stable/modules/clustering.html](https://scikit-learn.org/stable/modules/clustering.html)
+:::
 
 # Ukázka 2 {background-color="#0066cc"}
 

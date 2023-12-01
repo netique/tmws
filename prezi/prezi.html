@@ -607,13 +607,13 @@ Jan Netík <a href="https://orcid.org/0000-0002-3888-3203" class="quarto-title-a
 <li>redukce dimenzionality</li>
 <li>clustering</li>
 <li>sloučení obsahu dokumentů v rámci clusterů, tokenizace</li>
-<li>reprezentace témat pomocí upravené TF-IDF</li>
+<li>reprezentace témat pomocí upravené TF-IDF<sup>1</sup></li>
 </ol></li>
 </ul>
 
 <aside><div>
 <p>Dokumentace na <a href="https://maartengr.github.io/BERTopic/">maartengr.github.io/BERTopic</a></p>
-</div></aside></section>
+</div><ol class="aside-footnotes"><li id="fn1"><p>“c-TF-IDF”: jaká slova jsou nejvíce relevantní pro dané téma.</p></li></ol></aside></section>
 <section id="section-2" class="slide level2 smaller">
 <h2></h2>
 
@@ -630,14 +630,31 @@ Jan Netík <a href="https://orcid.org/0000-0002-3888-3203" class="quarto-title-a
 <li>speciálně uzpůsobený na věty (a kratší odstavce)<sup>1</sup></li>
 </ul></li>
 </ul>
-<aside><ol class="aside-footnotes"><li id="fn1"><p>Delší celky je vhodné rozdělit, nebo použít jiný model.</p></li></ol></aside></section>
+<aside><ol class="aside-footnotes"><li id="fn2"><p>Delší celky je vhodné rozdělit, nebo použít jiný model.</p></li></ol></aside></section>
 <section id="bertopic-redukce-dimenzí" class="slide level2">
 <h2>BERTopic – redukce dimenzí</h2>
 <ul>
 <li>máme data s 18 846 rádky 384 sloupci (384dimenzionální embeddings)</li>
 <li>potřeba redukce</li>
 <li>metoda UMAP (Uniform Manifold Approximation and Projection for Dimension Reduction)</li>
+<li>pozor – stochastické</li>
 </ul>
+</section>
+<section id="bertopic-clustering" class="slide level2">
+<h2>BERTopic – clustering</h2>
+<ul>
+<li>identifikace skupin mezi dokumenty</li>
+<li>metoda HDBSCAN (Hierarchical Density-Based Spatial Clustering of Applications with Noise)</li>
+<li>hustota prvků v prostoru</li>
+<li>možnost outlierů</li>
+</ul>
+</section>
+<section id="section-3" class="slide level2 smaller">
+<h2></h2>
+
+<img data-src="figs/clustering.png" class="r-stretch quarto-figure quarto-figure-center"><div style="text-align: right">
+<p>Zdroj: <a href="https://scikit-learn.org/stable/modules/clustering.html">scikit-learn.org/stable/modules/clustering.html</a></p>
+</div>
 </section></section>
 <section>
 <section id="ukázka-2" class="title-slide slide level1 center" data-background-color="#0066cc">
