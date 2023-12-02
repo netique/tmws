@@ -2,8 +2,6 @@ project:
   type: website
   render:
     - "*.qmd"
-    - "!analyses/"
-    - "!prezi/"
 
 website:
   site-url: https://netique.github.io/tmws/
@@ -29,6 +27,16 @@ website:
         text: Úvod
       - href: setup.qmd
         text: Příprava
+      - href: prezi/
+        text: Prezentace
+      - text: "Analýzy"
+        menu:
+          - text: Tradiční postup s LDA
+            href: analyses/lda.qmd
+          - text: Ukázka práce s BERTopic v Pythonu
+            href: analyses/ukazka_bertopic_py.qmd
+          - text: Ukázka práce s BERTopic v R
+            href: analyses/ukazka_bertopic_r.qmd
     tools:
       - icon: github
         href: https://github.com/netique/tmws/

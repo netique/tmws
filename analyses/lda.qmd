@@ -3,7 +3,7 @@ title: "Latent Dirichlet Allocation (LDA)"
 author: "Jan Netík"
 format: html
 execute: 
-  freeze: auto
+  freeze: true
 ---
 
 ```{r}

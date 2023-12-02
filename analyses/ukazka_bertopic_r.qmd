@@ -2,7 +2,11 @@
 title: "Ukázka BERTopic"
 subtitle: "V R v rámci RStudia"
 author: "Jan Netík"
-format: html
+format:
+  html:
+    df-print: paged
+execute: 
+  freeze: true
 ---
 
 Načteme R balíky.
@@ -13,7 +17,7 @@ library(here)
 library(reticulate)
 
 # pomocné funkce
-source(here("shared.R"))
+source(here("shared.R"), local = TRUE)
 ```
 
 Použijeme prostředí Pythonu, které jsme si nakonfigurovali dříve[^1].
@@ -34,7 +38,7 @@ sklearn_datasets <- import("sklearn.datasets")
 cv <- import("sklearn.feature_extraction.text")
 ```
 
-## Data
+## Data
 
 Klasický dataset 20 newsgroups je distribuován v modulu `sklearn.datesets`. Jde o cca 20K krátkých zpráv, které si vyměňovali uživatelé Usenetu (tj. někdy v 90. letech). Zprávy pocházejí rovnoměrně z 20 kanálů.
 
@@ -76,6 +80,7 @@ if (file.exists(here("data/embeddings/newsgroups.rds"))) {
 Odhadneme zbytek modelu.
 
 ```{r}
+
 topic_model <- bt$BERTopic(language = "english", verbose = TRUE)
 
 output <- topic_model$fit_transform(d_newsgroups, embeddings = embeddings)
@@ -92,7 +97,13 @@ tbl_output <- tibble(
 Základní přehled témat, počtů příslušných dokumentů a shrnutí clusterů získáte skrze:
 
 ```{r}
-topic_model$get_topic_info()
+# náhled omezíme jen na 5 prvních témat a z plných ukázek reprezentativních dokumentů
+# uděláme úryvky o 100 znacích (vše kvůli renderování reportu, pro práci v RStudiu
+# není třeba)
+
+topic_model$get_topic_info() |>
+  head() |>
+  mutate(Representative_Docs = map(Representative_Docs, \(x) str_trunc(x, 100)))
 ```
 
 Nejvíce zastoupené téma je pod indexem `0`. Podrobnosti o tématu získáme příkazem níže. Výstupem jsou slova s nejvyšší c-TF-IDF hodnotou, zobrazenou u každého slova. c-TF-IDF je TF-IDF fungující ne na úrovni dokumentů, ale clusterů. Říká, jaká slova jsou nejvíce relevantní pro dané téma; vychází ze "slepence" dokumentů v rámci clusteru.
@@ -140,7 +151,7 @@ Nejprve zkusíme vyřadit anglická stop slova, hledat a spojovat slovní spojen
 ```{r}
 vectorizer_model <-  cv$CountVectorizer(stop_words="english", ngram_range = tuple(1L, 3L), min_df = 20L)
 
-topic_model$update_topics(d_newsgroups, vectorizer_model=vectorizer_model )
+topic_model$update_topics(d_newsgroups, vectorizer_model=vectorizer_model)
 ```
 
 ```{r}
@@ -153,18 +164,21 @@ topic_model$visualize_barchart()
 # topic_model$update_topics(d_newsgroups, vectorizer_model=vectorizer_model, representation_model = representation_model_keybert)
 ```
 
-Hrát si můžeme i se samotnými popisky. Tento krok se defaultně nepoužívá. Zkusíme model od Facebooku, který umí obsah témat klasifikovat do kategorií, na kterých ani nemusel být trénovaný (tzv. "zero-shot" klasifikace). Je ale třeba vymyslet sadu kandidátních popisků.
+Hrát si můžeme i se samotnými popisky. Tento krok se defaultně nepoužívá. Zkusíme model od Facebooku, který umí obsah témat klasifikovat do kategorií, na kterých ani nemusel být trénovaný (tzv. "zero-shot" klasifikace). Je ale třeba vymyslet sadu kandidátních popisků (a doufat, že to náš počítač upočítá).
 
 ```{r}
+#| eval: false
+
 candidate_topics <- c("computers", "bicycles", "cars", "sport", "palestine", "health")
 representation_model <- bt_repre$ZeroShotClassification(candidate_topics = candidate_topics, model="facebook/bart-large-mnli") 
 
-
-topic_model$update_topics(d_newsgroups, vectorizer_model=vectorizer_model, representation_model = representation_model)
+# updatujeme jenom repre model
+topic_model$update_topics(d_newsgroups, representation_model = representation_model)
 
 ```
 
 ```{r}
+#| eval: false
 
 topic_model$get_topic_info() 
 topic_model$visualize_barchart()

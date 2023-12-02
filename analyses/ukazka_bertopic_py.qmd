@@ -5,7 +5,7 @@ author: "Jan Netík"
 format: html
 jupyter: python3
 execute: 
-  freeze: auto
+  freeze: true
 ---
 
 ```{python}
@@ -20,10 +20,12 @@ docs = fetch_20newsgroups(subset='all',  remove=('headers', 'footers', 'quotes')
 
 ```{python}
 # 384-dimensional sentence embeddings (cf. GPT davinci with 12K+)
-embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
 
-# if on Apple Silicon device, use rather
-# embedding_model = SentenceTransformer("all-MiniLM-L6-v2", device="mps")
+embedding_model = SentenceTransformer("all-MiniLM-L6-v2", device="mps")
+
+# if NOT on Apple Silicon device, use rather
+# embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
+
 ```
 
 ```{python}
