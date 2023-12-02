@@ -13,7 +13,7 @@ format:
     title-slide-attributes: 
       data-background-color: "#0066cc"
     html-math-method: katex
-    
+
 date-format: medium
 df-print: kable
 lang: cs
