@@ -137,6 +137,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="./setup.html"> 
 <span class="menu-text">Příprava</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./prezi/"> 
+<span class="menu-text">Prezentace</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-analýzy" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Analýzy</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-analýzy">    
+        <li>
+    <a class="dropdown-item" href="./analyses/lda.html">
+ <span class="dropdown-text">Tradiční postup s LDA</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./analyses/ukazka_bertopic_py.html">
+ <span class="dropdown-text">Ukázka práce s BERTopic v Pythonu</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./analyses/ukazka_bertopic_r.html">
+ <span class="dropdown-text">Ukázka práce s BERTopic v R</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
           </div> <!-- /navcollapse -->
           <div class="quarto-navbar-tools">
@@ -185,7 +208,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="novinky" class="level2">
 <h2 class="anchored" data-anchor-id="novinky">Novinky</h2>
 <ul>
-<li><p>veškerý kód je na GitHub repozitáři <a href="https://github.com/netique/tmws/" class="uri">https://github.com/netique/tmws/</a> (30. 11. 2023)</p></li>
+<li><p>v hlavní nabídce jsou “vyrenderované” analýzy (zdrojový kód je také na <a href="https://github.com/netique/tmws/">GitHubu</a>) (2. 12. 2023)</p></li>
+<li><p>v hlavní nabídce je k dispozici <a href="prezi/">prezentace</a> (zdrojový kód je také na <a href="https://github.com/netique/tmws/">GitHubu</a>) (2. 12. 2023)</p></li>
+<li><p>veškerý kód je na <a href="https://github.com/netique/tmws/">GitHub repozitáři</a> (30. 11. 2023)</p></li>
 <li><p>v záložce <a href="./setup.html">připrava</a> nově najdete odkaz na Jupyter Notebok na Google Colab, kde je ukázka topic modelingu v Pythonu pomocí modulu <code>bertopic</code> (29. 11. 2023)</p></li>
 </ul>
 
@@ -815,9 +840,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">## Novinky</span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>veškerý kód je na GitHub repozitáři <span class="ot">&lt;https://github.com/netique/tmws/&gt;</span> (30. 11. 2023)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>v hlavní nabídce jsou "vyrenderované" analýzy (zdrojový kód je také na <span class="co">[</span><span class="ot">GitHubu</span><span class="co">](https://github.com/netique/tmws/)</span>) (2. 12. 2023)</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>v záložce <span class="co">[</span><span class="ot">připrava</span><span class="co">](setup.qmd)</span> nově najdete odkaz na Jupyter Notebok na Google Colab, kde je ukázka topic modelingu v Pythonu pomocí modulu <span class="in">`bertopic`</span> (29. 11. 2023)</span></code><button title="Zkopírovat do schránky" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>v hlavní nabídce je k dispozici <span class="co">[</span><span class="ot">prezentace</span><span class="co">](prezi/)</span> (zdrojový kód je také na <span class="co">[</span><span class="ot">GitHubu</span><span class="co">](https://github.com/netique/tmws/)</span>) (2. 12. 2023)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>veškerý kód je na <span class="co">[</span><span class="ot">GitHub repozitáři</span><span class="co">](https://github.com/netique/tmws/)</span> (30. 11. 2023)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>v záložce <span class="co">[</span><span class="ot">připrava</span><span class="co">](setup.qmd)</span> nově najdete odkaz na Jupyter Notebok na Google Colab, kde je ukázka topic modelingu v Pythonu pomocí modulu <span class="in">`bertopic`</span> (29. 11. 2023)</span></code><button title="Zkopírovat do schránky" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">

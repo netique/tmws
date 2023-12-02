@@ -39,6 +39,195 @@
     "href": "index.html#novinky",
     "title": "Materiály k workshopu",
     "section": "Novinky",
-    "text": "Novinky\n\nveškerý kód je na GitHub repozitáři https://github.com/netique/tmws/ (30. 11. 2023)\nv záložce připrava nově najdete odkaz na Jupyter Notebok na Google Colab, kde je ukázka topic modelingu v Pythonu pomocí modulu bertopic (29. 11. 2023)"
+    "text": "Novinky\n\nv hlavní nabídce jsou “vyrenderované” analýzy (zdrojový kód je také na GitHubu) (2. 12. 2023)\nv hlavní nabídce je k dispozici prezentace (zdrojový kód je také na GitHubu) (2. 12. 2023)\nveškerý kód je na GitHub repozitáři (30. 11. 2023)\nv záložce připrava nově najdete odkaz na Jupyter Notebok na Google Colab, kde je ukázka topic modelingu v Pythonu pomocí modulu bertopic (29. 11. 2023)"
+  },
+  {
+    "objectID": "analyses/ukazka_bertopic_py.html",
+    "href": "analyses/ukazka_bertopic_py.html",
+    "title": "Ukázka BERTopic",
+    "section": "",
+    "text": "from bertopic import BERTopic\nfrom sklearn.datasets import fetch_20newsgroups\nfrom sentence_transformers import SentenceTransformer\n\n\ndocs = fetch_20newsgroups(subset='all',  remove=('headers', 'footers', 'quotes'))['data']\n\n\n# 384-dimensional sentence embeddings (cf. GPT davinci with 12K+)\n\nembedding_model = SentenceTransformer(\"all-MiniLM-L6-v2\", device=\"mps\")\n\n# if NOT on Apple Silicon device, use rather\n# embedding_model = SentenceTransformer(\"all-MiniLM-L6-v2\")\n\n\nembeddings = embedding_model.encode(docs, show_progress_bar=True)\n\n\n\n\n\ntopic_model = BERTopic()\ntopics, probs = topic_model.fit_transform(docs, embeddings=embeddings)\n\n\ntopic_model.visualize_barchart()"
+  },
+  {
+    "objectID": "analyses/lda.html",
+    "href": "analyses/lda.html",
+    "title": "Latent Dirichlet Allocation (LDA)",
+    "section": "",
+    "text": "library(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.4     ✔ tibble    3.2.1\n✔ lubridate 1.9.3     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(topicmodels)\nlibrary(ldatuning)\nlibrary(tidytext)\n\ndata(\"AssociatedPress\")\n\nData jsou uložena jako document-term matrix, převeďme si je tedy do tibble.\n\nap_tidy &lt;- AssociatedPress |&gt; tidy()\n\nap_tidy\n\n# A tibble: 302,031 × 3\n   document term       count\n      &lt;int&gt; &lt;chr&gt;      &lt;dbl&gt;\n 1        1 adding         1\n 2        1 adult          2\n 3        1 ago            1\n 4        1 alcohol        1\n 5        1 allegedly      1\n 6        1 allen          1\n 7        1 apparently     2\n 8        1 appeared       1\n 9        1 arrested       1\n10        1 assault        1\n# ℹ 302,021 more rows\n\n\nPoužijeme seznam stop slov z tidytext a přidáme si vlastní:\n\nstop_words &lt;- stop_words |&gt; add_row(word = c(\"th\", \"sr\", \"r\", \"h\", \"e\"))\n\nA smažeme je z našich dat. Poté z tidy formátu vyrobíme zpět document-term matrix.\n\nap_dtm &lt;- ap_tidy |&gt;\n  anti_join(stop_words, by = c(term = \"word\")) |&gt;\n  cast_dtm(document, term, count)\n\nap_dtm\n\n&lt;&lt;DocumentTermMatrix (documents: 2246, terms: 10133)&gt;&gt;\nNon-/sparse entries: 259203/22499515\nSparsity           : 99%\nMaximal term length: 18\nWeighting          : term frequency (tf)\n\n\n\noptimal.topics &lt;- FindTopicsNumber(\n  ap_dtm,\n  topics = 2:8,\n  metrics = c(\"Griffiths2004\", \"CaoJuan2009\", \"Arun2010\", \"Deveaud2014\"),\n  control = list(seed = 123),\n  mc.cores = parallel::detectCores() / 2, # zapojení všech jader způsobí pád R...\n  verbose = TRUE\n)\n\nfit models... done.\ncalculate metrics:\n  Griffiths2004... done.\n  CaoJuan2009... done.\n  Arun2010... done.\n  Deveaud2014... done.\n\n\n\nFindTopicsNumber_plot(optimal.topics)\n\nWarning: The `&lt;scale&gt;` argument of `guides()` cannot be `FALSE`. Use \"none\" instead as\nof ggplot2 3.3.4.\nℹ The deprecated feature was likely used in the ldatuning package.\n  Please report the issue at &lt;https://github.com/nikita-moor/ldatuning/issues&gt;.\n\n\n\n\n\n\n\n\n\nDejme tomu, že 5 témat už má dobré metriky a není to zas tak moc…\n“Fitneme” finální model:\n\nap_lda &lt;- LDA(ap_dtm, k = 5, control = list(seed = 123))\n\n\n# beta = pravděpodobnost, že slovo bylo \"vygenerováno\" daným tématem\nap_topics &lt;- tidy(ap_lda, matrix = \"beta\")\n\nap_topics\n\n# A tibble: 50,665 × 3\n   topic term       beta\n   &lt;int&gt; &lt;chr&gt;     &lt;dbl&gt;\n 1     1 adding 1.46e- 4\n 2     2 adding 1.01e- 4\n 3     3 adding 1.35e- 4\n 4     4 adding 1.96e- 4\n 5     5 adding 3.15e- 4\n 6     1 adult  3.14e- 5\n 7     2 adult  1.65e-17\n 8     3 adult  9.17e-16\n 9     4 adult  3.41e- 5\n10     5 adult  2.41e- 4\n# ℹ 50,655 more rows\n\n\n\nap_top_terms &lt;- ap_topics %&gt;%\n  group_by(topic) %&gt;%\n  slice_max(beta, n = 10) %&gt;%\n  ungroup() %&gt;%\n  arrange(topic, -beta)\n\nap_top_terms %&gt;%\n  mutate(term = reorder_within(term, beta, topic)) %&gt;%\n  ggplot(aes(beta, term, fill = factor(topic))) +\n  geom_col(show.legend = FALSE) +\n  facet_wrap(~topic, scales = \"free\") +\n  scale_y_reordered()\n\n\n\n\n\n\n\n\nSlova, co se s nějakou pravděpodobností vyskytují tak nějak napříč:\n\nap_topics |&gt;\n  filter(beta &gt; .001) |&gt;\n  pivot_wider(names_from = topic, values_from = beta, names_prefix = \"topic_\") |&gt;\n  filter(if_all(-term, \\(x) !is.na(x)))\n\n# A tibble: 11 × 6\n   term      topic_4 topic_5 topic_3 topic_2 topic_1\n   &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;\n 1 friday    0.00230 0.00170 0.00210 0.00107 0.00128\n 2 day       0.00146 0.00309 0.00160 0.00115 0.00174\n 3 million   0.0132  0.00140 0.00158 0.00319 0.00284\n 4 time      0.00162 0.00342 0.00190 0.00237 0.00344\n 5 wednesday 0.00162 0.00201 0.00192 0.00129 0.00194\n 6 monday    0.00167 0.00197 0.00187 0.00173 0.00139\n 7 american  0.00332 0.00192 0.00210 0.00135 0.00190\n 8 national  0.00154 0.00179 0.00231 0.00171 0.00392\n 9 tuesday   0.00216 0.00166 0.00172 0.00166 0.00219\n10 week      0.00296 0.00108 0.00170 0.00158 0.00237\n11 thursday  0.00265 0.00159 0.00201 0.00166 0.00205\n\n\nTeď k pravděpodobnosti témat v rámci jednotlivých dokumentů:\n\n# gamma = podíl slov v dokumentu, které byly \"vygenerovány\" daným tématem\nap_documents &lt;- tidy(ap_lda, matrix = \"gamma\")\n\nap_documents |&gt;\n  mutate(document = as.integer(document)) |&gt;\n  arrange(document, topic)\n\n# A tibble: 11,230 × 3\n   document topic    gamma\n      &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;\n 1        1     1 0.000319\n 2        1     2 0.0451  \n 3        1     3 0.000319\n 4        1     4 0.000319\n 5        1     5 0.954   \n 6        2     1 0.000312\n 7        2     2 0.459   \n 8        2     3 0.442   \n 9        2     4 0.0975  \n10        2     5 0.000312\n# ℹ 11,220 more rows\n\n\nSoučet hodnot \\gamma pro každý dokument je roven 1.\n\nap_documents |&gt;\n  group_by(document) |&gt;\n  summarise(gamma_sum = sum(gamma))\n\n# A tibble: 2,246 × 2\n   document gamma_sum\n   &lt;chr&gt;        &lt;dbl&gt;\n 1 1                1\n 2 10               1\n 3 100              1\n 4 1000             1\n 5 1001             1\n 6 1002             1\n 7 1003             1\n 8 1004             1\n 9 1005             1\n10 1006             1\n# ℹ 2,236 more rows\n\n\nDokument 1 je skoro čisté téma č. 5:\n\nap_tidy |&gt;\n  filter(document == 1) |&gt;\n  arrange(desc(count))\n\n# A tibble: 186 × 3\n   document term      count\n      &lt;int&gt; &lt;chr&gt;     &lt;dbl&gt;\n 1        1 police        7\n 2        1 school        7\n 3        1 teacher       7\n 4        1 shot          5\n 5        1 students      5\n 6        1 boy           4\n 7        1 boys          4\n 8        1 classroom     4\n 9        1 gun           3\n10        1 guns          3\n# ℹ 176 more rows\n\n\nAle dokument 2 je mix témat 2 a 3. Pojďme se podívat blíž:\n\nap_tidy |&gt;\n  filter(document == 2) |&gt;\n  arrange(desc(count))\n\n# A tibble: 174 × 3\n   document term      count\n      &lt;int&gt; &lt;chr&gt;     &lt;dbl&gt;\n 1        2 peres        13\n 2        2 offer         9\n 3        2 official      8\n 4        2 bechtel       7\n 5        2 rappaport     7\n 6        2 israel        6\n 7        2 oil           6\n 8        2 memo          5\n 9        2 pipeline      5\n10        2 company       4\n# ℹ 164 more rows\n\n\n\nlibrary(LDAvis)\n\n\npost &lt;- posterior(ap_lda)\nmat &lt;- ap_lda@wordassignments\n\nldavis_json &lt;- LDAvis::createJSON(\n  phi = post[[\"terms\"]],\n  theta = post[[\"topics\"]],\n  vocab = colnames(post[[\"terms\"]]),\n  doc.length = rowSums(as.matrix(mat), na.rm = TRUE),\n  term.frequency = colSums(as.matrix(mat), na.rm = TRUE)\n)\n\nif (interactive()) {\n  ldavis_json |&gt; serVis()\n}"
+  },
+  {
+    "objectID": "analyses/ukazka_bertopic_r.html",
+    "href": "analyses/ukazka_bertopic_r.html",
+    "title": "Ukázka BERTopic",
+    "section": "",
+    "text": "Načteme R balíky.\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.4     ✔ tibble    3.2.1\n✔ lubridate 1.9.3     ✔ tidyr     1.3.0\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(here)\n\nhere() starts at /Users/netik/Documents/git/tmws\n\nlibrary(reticulate)\n\n# pomocné funkce\nsource(here(\"shared.R\"), local = TRUE)\nPoužijeme prostředí Pythonu, které jsme si nakonfigurovali dříve1.\nuse_condaenv(\"topic_modeling\")\nNačteme Python moduly.\nbt &lt;- import(\"bertopic\")\nbt_repre &lt;- import(\"bertopic.representation\")\nst &lt;- import(\"sentence_transformers\")\nsklearn_datasets &lt;- import(\"sklearn.datasets\")\ncv &lt;- import(\"sklearn.feature_extraction.text\")"
+  },
+  {
+    "objectID": "analyses/ukazka_bertopic_r.html#data",
+    "href": "analyses/ukazka_bertopic_r.html#data",
+    "title": "Ukázka BERTopic",
+    "section": "Data",
+    "text": "Data\nKlasický dataset 20 newsgroups je distribuován v modulu sklearn.datesets. Jde o cca 20K krátkých zpráv, které si vyměňovali uživatelé Usenetu (tj. někdy v 90. letech). Zprávy pocházejí rovnoměrně z 20 kanálů.\nFunkce rovnou umožňuje smazat různé technické části zpráv, které nás nezajímají. Nakonec z objektu vybereme pouze data.\n\nnewsgroups_raw &lt;- sklearn_datasets$fetch_20newsgroups(\n  subset = \"all\",\n  remove = tuple(\"headers\", \"footers\", \"quotes\")\n)\n\n# data samotná jsou ještě o úroveň níže\nd_newsgroups &lt;- newsgroups_raw[[\"data\"]]"
+  },
+  {
+    "objectID": "analyses/ukazka_bertopic_r.html#trénujeme-model",
+    "href": "analyses/ukazka_bertopic_r.html#trénujeme-model",
+    "title": "Ukázka BERTopic",
+    "section": "Trénujeme model",
+    "text": "Trénujeme model\nZískáme zvlášť embeddings.\n\n# na Apple Silicon strojích chceme využít \"grafickou kartu\"\nst_device &lt;- NULL\n\nif (version$platform == \"aarch64-apple-darwin20\") {\n  st_device &lt;- \"mps\"\n}\n\n# definujeme model\nembedding_model &lt;- st$SentenceTransformer(\"all-MiniLM-L6-v2\", device = st_device)\n\n# spočítáme embeddings, pokud už je nemáme\nif (file.exists(here(\"data/embeddings/newsgroups.rds\"))) {\n  embeddings &lt;- read_rds(here(\"data/embeddings/newsgroups.rds\"))\n} else {\n  embeddings &lt;- embedding_model$encode(d_newsgroups, show_progress_bar = TRUE)\n}\n\nOdhadneme zbytek modelu.\n\ntopic_model &lt;- bt$BERTopic(language = \"english\", verbose = TRUE)\n\noutput &lt;- topic_model$fit_transform(d_newsgroups, embeddings = embeddings)\n\ntbl_output &lt;- tibble(\n  document = seq_along(d_newsgroups),\n  topic = output[[1]],\n  prob = output[[2]]\n)"
+  },
+  {
+    "objectID": "analyses/ukazka_bertopic_r.html#výsledky",
+    "href": "analyses/ukazka_bertopic_r.html#výsledky",
+    "title": "Ukázka BERTopic",
+    "section": "Výsledky",
+    "text": "Výsledky\nZákladní přehled témat, počtů příslušných dokumentů a shrnutí clusterů získáte skrze:\n\n# náhled omezíme jen na 5 prvních témat a z plných ukázek reprezentativních dokumentů\n# uděláme úryvky o 100 znacích (vše kvůli renderování reportu, pro práci v RStudiu\n# není třeba)\n\ntopic_model$get_topic_info() |&gt;\n  head() |&gt;\n  mutate(Representative_Docs = map(Representative_Docs, \\(x) str_trunc(x, 100)))\n\n\n  \n\n\n\nNejvíce zastoupené téma je pod indexem 0. Podrobnosti o tématu získáme příkazem níže. Výstupem jsou slova s nejvyšší c-TF-IDF hodnotou, zobrazenou u každého slova. c-TF-IDF je TF-IDF fungující ne na úrovni dokumentů, ale clusterů. Říká, jaká slova jsou nejvíce relevantní pro dané téma; vychází ze “slepence” dokumentů v rámci clusteru.\n\ntopic_model$get_topic(4) |&gt; tuple_list_to_tibble()\n\n\n  \n\n\n\n\ntopic_model$visualize_barchart()\n\n\n\n\n\nUMAP do 2 dimenzí\n\ntopic_model$visualize_documents(d_newsgroups, embeddings = embeddings, topics = tuple(as.list(1:10)))\n\n\n\n\n\n\ntopic_model$visualize_heatmap(top_n_topics = 50L)\n\n\n\n\n\n\ntopic_model$visualize_hierarchy(orientation = \"left\", top_n_topics = 10L)\n\nA marker object has been specified, but markers is not in the mode\nAdding markers to the mode...\nA marker object has been specified, but markers is not in the mode\nAdding markers to the mode...\nA marker object has been specified, but markers is not in the mode\nAdding markers to the mode...\nA marker object has been specified, but markers is not in the mode\nAdding markers to the mode...\nA marker object has been specified, but markers is not in the mode\nAdding markers to the mode...\nA marker object has been specified, but markers is not in the mode\nAdding markers to the mode...\nA marker object has been specified, but markers is not in the mode\nAdding markers to the mode...\nA marker object has been specified, but markers is not in the mode\nAdding markers to the mode...\nA marker object has been specified, but markers is not in the mode\nAdding markers to the mode...\n\n\n\n\n\n\nMůžeme srovnat s nějakými externími informacemi. Tady např. víme, v jakém novinkovém kanálu se zpráva objevila. Můžeme použít i údaj o výzkumné skupině atp.\n\nclasses_nms &lt;- newsgroups_raw$target_names\nclasses_idx &lt;- newsgroups_raw$target + 1L # prevent zeros\n\n\nclasses_fct &lt;- factor(classes_idx, labels = classes_nms)\n\ntopics_per_class &lt;- topic_model$topics_per_class(d_newsgroups, classes_fct)\n\ntopic_model$visualize_topics_per_class(topics_per_class = topics_per_class)\n\n\n\n\n\nEmbeddings, UMAP a HDBSCAN necháme, jak jsme je “nafitovali”, ale zkusíme poladit reprezentace clusterů.\nNejprve zkusíme vyřadit anglická stop slova, hledat a spojovat slovní spojení až o třech slovech a brát v potaz jen slova, co se vyskytnou alespoň 20krát:\n\nvectorizer_model &lt;-  cv$CountVectorizer(stop_words=\"english\", ngram_range = tuple(1L, 3L), min_df = 20L)\n\ntopic_model$update_topics(d_newsgroups, vectorizer_model=vectorizer_model)\n\n\ntopic_model$visualize_barchart()\n\n\n\n\n\n\n# representation_model_keybert &lt;- bt_repre$KeyBERTInspired()\n# topic_model$update_topics(d_newsgroups, vectorizer_model=vectorizer_model, representation_model = representation_model_keybert)\n\nHrát si můžeme i se samotnými popisky. Tento krok se defaultně nepoužívá. Zkusíme model od Facebooku, který umí obsah témat klasifikovat do kategorií, na kterých ani nemusel být trénovaný (tzv. “zero-shot” klasifikace). Je ale třeba vymyslet sadu kandidátních popisků (a doufat, že to náš počítač upočítá).\n\ncandidate_topics &lt;- c(\"computers\", \"bicycles\", \"cars\", \"sport\", \"palestine\", \"health\")\nrepresentation_model &lt;- bt_repre$ZeroShotClassification(candidate_topics = candidate_topics, model=\"facebook/bart-large-mnli\") \n\n# updatujeme jenom repre model\ntopic_model$update_topics(d_newsgroups, representation_model = representation_model)\n\n\ntopic_model$get_topic_info() \ntopic_model$visualize_barchart()\n\nPozn: máme-li peníze a API na OpenAI, můžeme o shrnutí témat poprosit ChatGPT."
+  },
+  {
+    "objectID": "prezi/index.html#section",
+    "href": "prezi/index.html#section",
+    "title": "Topic modeling 📚",
+    "section": "",
+    "text": "Topic… co? 🤔"
+  },
+  {
+    "objectID": "prezi/index.html#topic-modeling",
+    "href": "prezi/index.html#topic-modeling",
+    "title": "Topic modeling 📚",
+    "section": "Topic modeling",
+    "text": "Topic modeling\n\n\nvelké množství textu\nrozdělení do dokumentů\n❓ jaká témata se v textu objevují\n❓ jaké je zastoupení témat v jednotlivých dokumentech\n\n\n\n\n\n\n\n\n\nPozor\n\n\nTM vs. shrnutí textu, extrakce klíčových slov, zero-shot klasifikace, rozeznávání pojmenovaných entit atp.\n\n\n\n\n\n\noblast natural language processing (NLP), někdo říká text analysis\nsupervidované vs. nesupervidované (TM, clustering…) učení"
+  },
+  {
+    "objectID": "prezi/index.html#něco-na-čtení",
+    "href": "prezi/index.html#něco-na-čtení",
+    "title": "Topic modeling 📚",
+    "section": "Něco na čtení",
+    "text": "Něco na čtení\n\n\n\n\n\n\n\nSilge & Robinson (2017)\n\n\n\n\n\n\nHvitfeldt & Silge (2021)"
+  },
+  {
+    "objectID": "prezi/index.html#z-historie",
+    "href": "prezi/index.html#z-historie",
+    "title": "Topic modeling 📚",
+    "section": "Z “historie”",
+    "text": "Z “historie”\n\npreprocessing, stopwords, tokenizace (viz Hvitfeldt & Silge, 2021)\nco s flektivními jazyky jako čeština?\n\nlemmatizace, stemming\n\ntokeny s sebou nenesou kontext\n(lze trochu obejít pomocí n-gramů)"
+  },
+  {
+    "objectID": "prezi/index.html#n-gramy",
+    "href": "prezi/index.html#n-gramy",
+    "title": "Topic modeling 📚",
+    "section": "N-gramy",
+    "text": "N-gramy\n\nmísto topic a modeling zavedu topic modeling\npohyblivé okno nad textem → možnost grafů"
+  },
+  {
+    "objectID": "prezi/index.html#n-gramy-1",
+    "href": "prezi/index.html#n-gramy-1",
+    "title": "Topic modeling 📚",
+    "section": "N-gramy",
+    "text": "N-gramy\n\n\nSilge & Robinson (2017)"
+  },
+  {
+    "objectID": "prezi/index.html#z-historie-2",
+    "href": "prezi/index.html#z-historie-2",
+    "title": "Topic modeling 📚",
+    "section": "Z “historie” 2",
+    "text": "Z “historie” 2\n\nčetnosti (term frequency)\nTF-IDF (term frequency – inverse document frequency; součin)\nIDF(\\text{token}) = \\ln{\\left(\\frac{n_{\\text{dokumentů}}}{n_{\\text{dokumentů s tokenem}}}\\right)}\ndocument-term matrix (DTM)"
+  },
+  {
+    "objectID": "prezi/index.html#section-1",
+    "href": "prezi/index.html#section-1",
+    "title": "Topic modeling 📚",
+    "section": "",
+    "text": "Document-term matrix\n\n\n\ntopic\nmodeling\n…\n\n\n\n\ndokument č. 1\n0\n5\n…\n\n\ndokument č. 2\n2\n1\n…\n\n\ndokument č. 3\n4\n8\n…\n\n\n…\n…\n…\n…"
+  },
+  {
+    "objectID": "prezi/index.html#přístupy-k-topic-modelingu",
+    "href": "prezi/index.html#přístupy-k-topic-modelingu",
+    "title": "Topic modeling 📚",
+    "section": "Přístupy k topic modelingu",
+    "text": "Přístupy k topic modelingu\n\nlatentní Dirichletova alokace (Latent Dirchlet Allocation, LDA, Blei et al., 2003)\nNon-negative Matrix Factorization (NMF)\nLatent Semantic Analysis (LSA)"
+  },
+  {
+    "objectID": "prezi/index.html#latent-dirchlet-allocation",
+    "href": "prezi/index.html#latent-dirchlet-allocation",
+    "title": "Topic modeling 📚",
+    "section": "Latent Dirchlet Allocation",
+    "text": "Latent Dirchlet Allocation\n\nkaždý dokument je směsicí různých témat\nkaždé téma se skládá z mixu slov\njednotlivá slova mohou být zastoupena ve více tématech"
+  },
+  {
+    "objectID": "prezi/index.html#problémy-tradičních-přístupů",
+    "href": "prezi/index.html#problémy-tradičních-přístupů",
+    "title": "Topic modeling 📚",
+    "section": "Problémy tradičních přístupů",
+    "text": "Problémy tradičních přístupů\n\nnutnost preprocessingu\ntokeny standardně bez kontextu\nnáročná interpretace výsledků"
+  },
+  {
+    "objectID": "prezi/index.html#možnosti",
+    "href": "prezi/index.html#možnosti",
+    "title": "Topic modeling 📚",
+    "section": "Možnosti",
+    "text": "Možnosti\n\nword embeddings (“vnoření slov”)\n\npřevedení textových dat na čísla\nčísla = N-dimenzionální vektory v prostoru\nmůžeme dělat matematiku, např:\n\nkosinová podobnost (cos úhlu mezi 2 vektory) nebo\nvec(\\text{král}) - vec(\\text{muž}) + vec(\\text{žena}) = vec(\\text{královna})\n\n\n\n\n\nword2vec (Mikolov et al., 2013)"
+  },
+  {
+    "objectID": "prezi/index.html#možnosti-2",
+    "href": "prezi/index.html#možnosti-2",
+    "title": "Topic modeling 📚",
+    "section": "Možnosti 2",
+    "text": "Možnosti 2\n\n\nprůměr word embeddings za každý dokument\nredukce dimenzionality\nclustering\n❓❓❓"
+  },
+  {
+    "objectID": "prezi/index.html#možnosti-3",
+    "href": "prezi/index.html#možnosti-3",
+    "title": "Topic modeling 📚",
+    "section": "Možnosti 3",
+    "text": "Možnosti 3\n\ntop2vec (Angelov, 2020)\n\nembeddings pro dokumenty a slova ve stejném prostoru\nredukce dimenzionality\nclustering\nhledání nejbližších slov kolem centroidů clusterů → interpretace"
+  },
+  {
+    "objectID": "prezi/index.html#možnosti-4",
+    "href": "prezi/index.html#možnosti-4",
+    "title": "Topic modeling 📚",
+    "section": "Možnosti 4",
+    "text": "Možnosti 4\n\nBERTopic (Grootendorst, 2022)\n\nembeddings dokumentů\nredukce dimenzionality\nclustering\nsloučení obsahu dokumentů v rámci clusterů, tokenizace\nreprezentace témat pomocí upravené TF-IDF1\n\n\n\n\nDokumentace na maartengr.github.io/BERTopic\n“c-TF-IDF”: jaká slova jsou nejvíce relevantní pro dané téma."
+  },
+  {
+    "objectID": "prezi/index.html#section-2",
+    "href": "prezi/index.html#section-2",
+    "title": "Topic modeling 📚",
+    "section": "",
+    "text": "Zdroj: maartengr.github.io/BERTopic"
+  },
+  {
+    "objectID": "prezi/index.html#bertopic-embeddings",
+    "href": "prezi/index.html#bertopic-embeddings",
+    "title": "Topic modeling 📚",
+    "section": "BERTopic – embeddings",
+    "text": "BERTopic – embeddings\n\nhlavní “objekt” celého modelování\npředtrénovaný model SBERT (Reimers & Gurevych, 2019)\n\nspeciálně uzpůsobený na věty (a kratší odstavce)1\n\n\nDelší celky je vhodné rozdělit, nebo použít jiný model."
+  },
+  {
+    "objectID": "prezi/index.html#bertopic-redukce-dimenzí",
+    "href": "prezi/index.html#bertopic-redukce-dimenzí",
+    "title": "Topic modeling 📚",
+    "section": "BERTopic – redukce dimenzí",
+    "text": "BERTopic – redukce dimenzí\n\nmáme data s 18 846 rádky 384 sloupci (384dimenzionální embeddings)\npotřeba redukce\nmetoda UMAP (Uniform Manifold Approximation and Projection for Dimension Reduction)\npozor – stochastické"
+  },
+  {
+    "objectID": "prezi/index.html#bertopic-clustering",
+    "href": "prezi/index.html#bertopic-clustering",
+    "title": "Topic modeling 📚",
+    "section": "BERTopic – clustering",
+    "text": "BERTopic – clustering\n\nidentifikace skupin mezi dokumenty\nmetoda HDBSCAN (Hierarchical Density-Based Spatial Clustering of Applications with Noise)\nhustota prvků v prostoru\nmožnost outlierů"
+  },
+  {
+    "objectID": "prezi/index.html#section-3",
+    "href": "prezi/index.html#section-3",
+    "title": "Topic modeling 📚",
+    "section": "",
+    "text": "Zdroj: scikit-learn.org/stable/modules/clustering.html"
+  },
+  {
+    "objectID": "prezi/index.html#reference",
+    "href": "prezi/index.html#reference",
+    "title": "Topic modeling 📚",
+    "section": "Reference",
+    "text": "Reference\n\n\n\n\n\n\n\n\n\nAngelov, D. (2020). Top2Vec: Distributed Representations of Topics. arXiv. https://arxiv.org/abs/2008.09470\n\n\nBlei, D. M., Ng, A. Y., & Jordan, M. I. (2003). Latent Dirichlet Allocation. The Journal of Machine Learning Research, 3, 993–1022.\n\n\nGrootendorst, M. (2022). BERTopic: Neural topic modeling with a class-based TF-IDF procedure. arXiv preprint arXiv:2203.05794.\n\n\nHvitfeldt, E., & Silge, J. (2021). Supervised Machine Learning for Text Analysis in R. https://doi.org/10.1201/9781003093459\n\n\nMikolov, T., Chen, K., Corrado, G., & Dean, J. (2013). Efficient Estimation of Word Representations in Vector Space. arXiv. https://arxiv.org/abs/1301.3781\n\n\nReimers, N., & Gurevych, I. (2019). Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks. https://arxiv.org/abs/1908.10084\n\n\nSilge, J., & Robinson, D. (2017). Text Mining with R: A Tidy Approach. O’Reilly Media."
   }
 ]
