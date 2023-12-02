@@ -2,6 +2,8 @@
 title: "Latent Dirichlet Allocation (LDA)"
 author: "Jan Netík"
 format: html
+execute: 
+  freeze: auto
 ---
 
 ```{r}
@@ -134,16 +136,18 @@ library(LDAvis)
 ```
 
 ```{r}
-# post <- posterior(ap_lda)
-# mat <- ap_lda@wordassignments
-#
-# ldavis_json <- LDAvis::createJSON(
-#   phi = post[["terms"]],
-#   theta = post[["topics"]],
-#   vocab = colnames(post[["terms"]]),
-#   doc.length = rowSums(as.matrix(mat), na.rm = TRUE),
-#   term.frequency = colSums(as.matrix(mat), na.rm = TRUE)
-# )
-#
-# ldavis_json |> serVis()
+post <- posterior(ap_lda)
+mat <- ap_lda@wordassignments
+
+ldavis_json <- LDAvis::createJSON(
+  phi = post[["terms"]],
+  theta = post[["topics"]],
+  vocab = colnames(post[["terms"]]),
+  doc.length = rowSums(as.matrix(mat), na.rm = TRUE),
+  term.frequency = colSums(as.matrix(mat), na.rm = TRUE)
+)
+
+if (interactive()) {
+  ldavis_json |> serVis()
+}
 ```
